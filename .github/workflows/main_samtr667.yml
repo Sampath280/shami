@@ -57,11 +57,17 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
+      
+      - name: Run Django server
+          run: |
+            python manage.py migrate
+            python manage.py test restaurant_review &&
+            python manage.py runserver 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'samtr667'
           slot-name: 'Production'
+          
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_11122ABA43274C9AA486929B455E6E1E }}
